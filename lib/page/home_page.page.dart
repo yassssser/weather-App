@@ -17,6 +17,10 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   void initState() {
     super.initState();
+    _getweather();
+  }
+
+  Future<void> _getweather() async {
     context.read<WeatherBloc>().add(FetchWeather());
   }
 
@@ -35,7 +39,19 @@ class _WeatherPageState extends State<WeatherPage> {
               },
             );
           } else if (state.requestState == StateStatus.ERROR) {
-            return Center(child: Text(state.errorMessage!));
+            return RefreshIndicator(
+                onRefresh: _getweather,
+                child: ListView(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(state.errorMessage!),
+                    ),
+                  ],
+                ));
           } else {
             return Container();
           }

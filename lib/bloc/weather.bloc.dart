@@ -22,6 +22,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         emit(WeatherState(
           requestState: StateStatus.LOADED,
           weather: res.data!.timelines,
+          currentAction: event,
         ));
       } on DioException catch (e) {
         debugPrint(e.toString());
