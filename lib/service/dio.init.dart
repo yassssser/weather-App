@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:weather_app/constant/constants.dart';
+import 'package:weather_app/core/constant/constants.dart';
 
 Dio dio = Dio(
   BaseOptions(
     baseUrl: baseUrl,
     connectTimeout: connectTimeout,
     receiveTimeout: receiveTimeout,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   ),
 )..interceptors.addAll([
     PrettyDioLogger(
