@@ -35,7 +35,11 @@ class _WeatherPageState extends State<WeatherPage> {
             return ListView.builder(
               itemCount: state.weather!.length,
               itemBuilder: (BuildContext context, int index) {
-                return ListWeatherWidget(weather: state.weather![index]);
+                if (state.weather![index].timestep == "1h") {
+                  return ListWeatherWidget(weather: state.weather![index]);
+                } else {
+                  return Container();
+                }
               },
             );
           } else if (state.requestState == StateStatus.ERROR) {
