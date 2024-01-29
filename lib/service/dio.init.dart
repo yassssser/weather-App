@@ -7,9 +7,6 @@ Dio dio = Dio(
     baseUrl: baseUrl,
     connectTimeout: connectTimeout,
     receiveTimeout: receiveTimeout,
-    headers: {
-      'Content-Type': 'application/json',
-    },
   ),
 )..interceptors.addAll([
     PrettyDioLogger(
