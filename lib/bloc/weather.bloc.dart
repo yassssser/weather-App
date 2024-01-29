@@ -5,8 +5,10 @@ import 'package:get_it/get_it.dart';
 import 'package:weather_app/bloc/weather.event.dart';
 import 'package:weather_app/bloc/weather.state.dart';
 import 'package:weather_app/enum/state.enum.dart';
+import 'package:weather_app/mock/weather.json.dart';
 import 'package:weather_app/model/weather.model.dart';
 import 'package:weather_app/service/weather.service.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherService? get _weatherService => GetIt.I<WeatherService>();
@@ -17,13 +19,23 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         requestState: StateStatus.LOADING,
       ));
       try {
-        Weather res = await _weatherService!.getWeather();
+        final connectivityResult = await (Connectivity().checkConnectivity());
+        if (connectivityResult == ConnectivityResult.none) {
+          Weather res = Weather.fromJson(WeatherMock);
+          emit(WeatherState(
+            requestState: StateStatus.LOADED,
+            weather: res.data!.timelines,
+            currentAction: event,
+          ));
+        } else {
+          Weather res = await _weatherService!.getWeather();
 
-        emit(WeatherState(
-          requestState: StateStatus.LOADED,
-          weather: res.data!.timelines,
-          currentAction: event,
-        ));
+          emit(WeatherState(
+            requestState: StateStatus.LOADED,
+            weather: res.data!.timelines,
+            currentAction: event,
+          ));
+        }
       } on DioException catch (e) {
         debugPrint(e.toString());
 
